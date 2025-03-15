@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container">
+    <!-- Título da página -->
+    <h1>Página do Post</h1>
+    <hr>
+    <div class="row mb-4">
+        <!-- Coluna para a imagem do autor e cursos -->
+        <div class="col-12 col-md-3 d-flex flex-column align-items-center">
+            <!-- Imagem do autor -->
+            <img src="{{ url_for('static', filename='img_perfil/{}'.format(post.autor_post.foto_perfil)) }}"
+                 alt="Foto de perfil de {{ post.autor_post.username }}"
+                 class="img-fluid"
+                 style="width: 140px; height: 140px; object-fit: cover; border: 4px solid #007bff; border-radius: 5px;">
+
+            <!-- Nome do autor -->
+            <strong class="mt-3">{{ post.autor_post.username }}</strong>
+
+            <!-- Lista de cursos -->
+            <div class="mt-4 w-100 text-center">
+                <h3>Cursos Inscritos</h3>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <!-- Loop para exibir os cursos -->
+                    {% for curso in post.autor_post.cursos.split(';') %}
+                    <button type="button" class="btn btn-success" disabled>{{ curso }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+
+
+ <!-- Coluna para o conteúdo do post -->
+<div class="col-12 col-md-7 mt-4 mt-md-0 mb-5 p-3 meupost" style="border-radius: 5px; background-color: #f8f9fa;">
+    <!-- Exibe o título do post com a data de criação -->
+    <h3 style="font-family: 'Playfair Display', sans-serif;">{{ post.titulo }}
+        <!-- Exibe a data de criação formatada no formato dd/mm/aa -->
+        <small class="text-muted" style="font-size: 15px">
+            - Data de Criação: {{ post.data_criacao.strftime('%d/%m/%y') }}
+            <!-- Se o formulário existir (geralmente verifica se o usuário tem permissão para editar ou excluir) -->
+            {% if form %}
+                <!-- Link para editar o post -->
+                - <a href="#post_editar" style="text-decoration: none; color: green"> Editar Post</a> /
+                <!-- Link para excluir o post, com ação de exibição de modal para confirmação -->
+                <a href="#" style="color: red; text-decoration: none;" data-bs-toggle="modal" data-bs-target="#excluirpost">Excluir Post</a>
+            {% endif %}
+        </small>
+    </h3>
+    <!-- Exibe o corpo do post -->
+    <p style="font-family: 'Playfair Display', sans-serif;">{{ post.corpo }}</p>
+</div>
+</div>
+</div>
+
+
+
+
+
+{% if form %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+
+                <!-- Formulário de edição de post -->
+                <form method="post" action="" class="border p-4 rounded-lg shadow-lg bg-light">
+
+                    <!-- Token CSRF para proteção contra ataques -->
+                    {{ form.csrf_token }}
+
+                    <!-- Título do formulário -->
+                    <legend class="text-center text-primary mb-4">Editar Post</legend>
+
+                    <fieldset>
+
+                        <!-- Campo Titulo -->
+                        <div class="form-group mt-3" id="post_editar">
+                            {{ form.titulo.label(class='form-control-label') }}
+                            {% if form.titulo.errors %}
+                                <!-- Caso haja erro, o campo terá borda vermelha e exibirá o erro abaixo -->
+                                {{ form.titulo(class='form-control is-invalid') }}
+                                <div class="invalid-feedback">
+                                    {% for erro in form.titulo.errors %}
+                                        <p>{{ erro }}</p>  <!-- Exibindo os erros do campo titulo -->
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <!-- Caso contrário, o campo será exibido sem erro -->
+                                {{ form.titulo(class='form-control border border-info') }}
+                            {% endif %}
+                        </div>
+
+                        <!-- Campo Corpo -->
+                        <div class="form-group mt-3">
+                            {{ form.corpo.label(class='form-control-label') }}
+                            {% if form.corpo.errors %}
+                                <!-- Caso haja erro, o campo terá borda vermelha e exibirá o erro abaixo -->
+                                {{ form.corpo(class='form-control is-invalid') }}
+                                <div class="invalid-feedback">
+                                    {% for erro in form.corpo.errors %}
+                                        <p>{{ erro }}</p>  <!-- Exibindo os erros do campo corpo -->
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <!-- Caso contrário, o campo será exibido sem erro -->
+                                {{ form.corpo(class='form-control border border-info') }}
+                            {% endif %}
+                        </div>
+
+                    </fieldset>
+
+                    <!-- Botão de envio do formulário -->
+                    <div class="text-center">
+                        {{ form.btn_post(class='btn btn-outline-primary mt-4 w-100') }}
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="excluirpost" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Tem certeza que deseja excluir esse post ?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Ao excluir esse post, ele não poderá ser recuperado</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <form method="post" action="{{ url_for('excluir_post', post_id=post.id) }}">
+            <button type="submit" class="btn btn-danger">Excluir Post</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}
+
+
+

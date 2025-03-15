@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<!-- Início da seção de perfil -->
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card p-3 shadow-lg" style="width: auto; border-radius: 15px;">
+        <div class="d-flex align-items-center">
+            <!-- Imagem de perfil -->
+            <div class="image pe-3">
+                <img src="{{ img_perfil }}"
+                     style="width: 250px; height: 200px; object-fit: cover; border: 4px solid #007bff; border-radius: 5px;">
+            </div>
+            <!-- Informações do usuário -->
+            <div class="ml-3 w-100">
+                <h4 class="mb-0 mt-0 text-primary">{{ current_user.username }}</h4>
+                <span class="text-muted">{{ current_user.email }}</span>
+
+                <!-- Estatísticas do usuário (Cursos e Posts) -->
+                <div class="p-3 mt-3 bg-primary d-flex justify-content-between rounded text-white stats">
+                    {% if 'Não Informado' in current_user.cursos %}
+                        <div class="d-flex flex-column">
+                            <span class="articles">Cursos</span>
+                            <span class="number1">0</span>
+                        </div>
+                    {% else %}
+                        <div class="d-flex flex-column">
+                            <span class="articles">Cursos</span>
+                            <span class="number1">{{ current_user.cursos.count(';') + 1 }}</span>
+                        </div>
+                    {% endif %}
+                    <div class="d-flex flex-column">
+                        <span class="rating">Posts</span>
+                        <span class="number3">{{ current_user.contar_posts()}}</span>
+                    </div>
+                </div>
+
+                <!-- Botão de editar perfil -->
+                <div class="button mt-3">
+                    <a href="{{ url_for('editar_perfil') }}">
+                        <button class="btn btn-outline-primary w-100">Editar Perfil</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<!-- Seção de Cursos Inscritos -->
+<div class="row justify-content-center mt-5">
+    <div class="col-12 col-md-6 text-center">
+        <h2 class="text-primary">Cursos Inscritos</h2>
+        <br>
+        <!-- Exibição dos cursos -->
+        {% for curso in current_user.cursos.split(';') %}
+            <button type="button" class="btn btn-success mt-2" disabled>{{ curso }}</button>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Bloco de edição de perfil (caso esteja sendo utilizado) -->
+{% block form_editar_perfil %}
+{% endblock %}
+
+{% endblock %}

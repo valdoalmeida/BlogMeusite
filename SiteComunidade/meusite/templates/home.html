@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container">
+    <!-- Título da página -->
+    <h1 class="text-center mt-5 mb-5" style="font-family: 'Playfair Display', sans-serif;" >Posts dos Usúarios</h1>
+    <hr>
+
+    <!-- Loop para exibir os posts -->
+    {% for post in post %}
+    <div class="row mb-4">
+        <!-- Coluna para a imagem do autor e cursos -->
+        <div class="col-12 col-md-3 d-flex flex-column align-items-center">
+            <!-- Imagem do autor -->
+            <img src="{{ url_for('static', filename='img_perfil/{}'.format(post.autor_post.foto_perfil)) }}"
+                 alt="Foto de perfil de {{ post.autor_post.username }}"
+                 class="img-fluid"
+                 style="width: 140px; height: 140px; object-fit: cover; border: 4px solid #007bff; border-radius: 5px;">
+
+            <!-- Nome do autor -->
+            <strong class="mt-3" style="font-family: 'Playfair Display', sans-serif;">{{ post.autor_post.username }}</strong>
+
+            <!-- Lista de cursos -->
+            <div class="mt-4 w-100 text-center">
+                <h3>Cursos Inscritos</h3>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <!-- Loop para exibir os cursos -->
+                    {% for curso in post.autor_post.cursos.split(';') %}
+                    <button type="button" class="btn btn-success" disabled>{{ curso }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Coluna para o conteúdo do post -->
+        <div class="col-12 col-md-7 mt-4 mt-md-0 mb-5 p-3 meupost" style="border-radius: 5px; background-color: #f8f9fa;">
+            <a style="text-decoration: none; color: inherit" href="{{ url_for('exibir_post', post_id=post.id) }}"><h3>{{ post.titulo }}</h3></a>
+            <p>{{ post.corpo }}</p>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}
+
+
+

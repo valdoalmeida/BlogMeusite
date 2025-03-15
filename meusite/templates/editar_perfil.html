@@ -1,0 +1,102 @@
+{% extends 'perfil.html' %}
+
+{% block form_editar_perfil %}
+
+<!-- Divisão para separar o conteúdo -->
+<hr class="my-4" style="border-color: #ddd;">
+
+<!-- Container principal com espaçamento -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <!-- Formulário de edição de perfil -->
+            <form method="post" action="" class="border p-4 rounded-lg shadow-lg bg-light" enctype="multipart/form-data">
+
+                <!-- Token CSRF para segurança -->
+                {{ form.csrf_token }}
+
+                <!-- Título do formulário -->
+                <legend class="text-center text-primary mb-4">Editar Perfil</legend>
+
+                <fieldset>
+
+                    <!-- Campo de username -->
+                    <div class="form-group mt-3">
+                        {{ form.username.label(class='form-control-label') }}
+
+                        {% if form.username.errors %}
+                            <!-- Caso haja erro, o campo fica com borda vermelha e exibe o erro abaixo -->
+                            {{ form.username(class='form-control is-invalid') }}
+                            <div class="invalid-feedback">
+                                {% for erro in form.username.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- Campo sem erro -->
+                            {{ form.username(class='form-control border border-info') }}
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo de email -->
+                    <div class="form-group mt-3">
+                        {{ form.email.label(class='form-control-label') }}
+
+                        {% if form.email.errors %}
+                            <!-- Caso haja erro, o campo fica com borda vermelha e exibe o erro abaixo -->
+                            {{ form.email(class='form-control is-invalid') }}
+                            <div class="invalid-feedback">
+                                {% for erro in form.email.errors %}
+                                    {{ erro }}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- Campo sem erro -->
+                            {{ form.email(class='form-control border border-info') }}
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo de foto de perfil -->
+                    <div class="form-group mt-3">
+                        {{ form.foto_perfil.label(class='form-label') }}
+                        {{ form.foto_perfil(class="form-control-file border") }}
+                        {% if form.foto_perfil.errors %}
+                            <!-- Erros para foto de perfil -->
+                            {% for erro in form.foto_perfil.errors %}
+                                <span class="text-danger">{{ erro }}</span><br>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <hr class="my-4" style="border-color: #ddd;">
+
+                    <!-- Seção de cursos -->
+                    <h4 class="text-info">Cursos</h4>
+                    <div class="row">
+                        {% for campo in form %}
+                            {% if 'curso_' in campo.name %}
+                                <div class="col-md-6">
+                                    <div class="form-group mt-3 form-check">
+                                        <!-- Campos de seleção de cursos -->
+                                        {{ campo(class='form-check-input border border-info') }}
+                                        {{ campo.label(class='form-check-label') }}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                </fieldset>
+
+                <!-- Botão de envio do formulário -->
+                <div class="text-center">
+                    {{ form.submit_btn_editarPerfil(class='btn btn-outline-primary mt-4 w-100') }}
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

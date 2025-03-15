@@ -1,0 +1,89 @@
+
+
+
+<!-- Início da Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+  <!-- Container principal para a navbar -->
+  <div class="container-fluid">
+
+    <!-- Logo do site - Pode ser alterado para incluir o logo do seu site -->
+    <a class="navbar-brand" href="/" style="font-weight: bold;">Meu Site</a>
+
+    <!-- Botão de toggle que aparece em telas pequenas (hamburger menu) -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span> <!-- Ícone do botão de toggle -->
+    </button>
+
+    <!-- Área da navbar que se expande ou colapsa -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <!-- Lista de navegação principal -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Link para a página inicial -->
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{{ url_for('meuSite') }}">
+            <!-- Ícone de casa para indicar "Início" -->
+            <i class="fas fa-home"></i> Início
+          </a>
+        </li>
+
+        <!-- Link para a lista de usuários -->
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('usuario') }}">
+            <!-- Ícone de usuários -->
+            <i class="fas fa-users"></i> Usuários
+          </a>
+        </li>
+      </ul>
+
+      <!-- Seção de navegação que depende do status de login do usuário -->
+      <ul class="navbar-nav ms-auto d-flex">
+        {% if current_user.is_authenticated %}
+          <!-- Link para criar um post, visível apenas para usuários autenticados -->
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('criar_post') }}">
+              <!-- Ícone de lápis para indicar "Criar Post" -->
+              <i class="fas fa-pencil-alt"></i> Criar Post
+            </a>
+          </li>
+
+          <!-- Link para o perfil do usuário -->
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('perfil') }}">
+              <!-- Ícone de usuário para indicar "Meu Perfil" -->
+              <i class="fas fa-user"></i> Meu Perfil
+            </a>
+          </li>
+
+          <!-- Link para fazer logout -->
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('sair') }}">
+              <!-- Ícone de saída para indicar "Sair" -->
+              <i class="fas fa-sign-out-alt"></i> Sair
+            </a>
+          </li>
+        {% else %}
+          <!-- Link para login, visível para usuários não autenticados -->
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login') }}">
+              <!-- Ícone de login -->
+              <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+          </li>
+
+          <!-- Link para criar uma conta, visível para usuários não autenticados -->
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login') }}">
+              <!-- Ícone de adicionar usuário -->
+              <i class="fas fa-user-plus"></i> Criar Conta
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- Fim da Navbar -->
+
+<!-- Comentários explicativos para cada parte do código acima -->
+
