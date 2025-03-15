@@ -3,6 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+import os
 
 # Cria a aplicação Flask
 app = Flask(__name__)
@@ -10,6 +11,9 @@ app = Flask(__name__)
 # Definindo a chave secreta para a aplicação
 # A chave secreta é usada para proteger sessões e cookies
 app.config['SECRET_KEY'] = '9140a32b7f46b6c0742849a172cbad7e'
+
+
+
 
 # Caminho absoluto para o banco de dados SQLite
 # Isso cria um caminho para o arquivo 'banco.db' que estará na mesma pasta do script
@@ -20,9 +24,15 @@ db_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'banco.db')
 if not os.path.exists(os.path.dirname(db_path)):
     os.makedirs(os.path.dirname(db_path))
 
-# Configuração da URI para o banco de dados SQLite
-# O banco de dados estará localizado no caminho 'db_path'
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+
+if os.getenv("DATABASE_URL"):
+    # Configuração da URI para o banco de dados SQLite
+    # O banco de dados estará localizado no caminho 'db_path'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
+
+
 
 # Desativa a geração de alertas sobre modificações no banco de dados
 # Isso evita o aparecimento de um alerta no console sempre que o SQLAlchemy detecta que a aplicação
@@ -48,3 +58,4 @@ login_manager.login_message_category = 'alert-info'
 
 # Importa as rotas da aplicação (deve ser feito após a criação da aplicação)
 from meusite import routes
+
